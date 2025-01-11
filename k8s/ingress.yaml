@@ -1,13 +1,19 @@
-apiVersion: v1
-kind: Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: cv-webapp-service
+  name: cv-webapp-ingress
   namespace: cv-webapp
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  type: LoadBalancer
-  selector:
-    app: cv-webapp
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
+  rules:
+  - host: tfaz.work.gd
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cv-webapp-service
+            port:
+              number: 80
